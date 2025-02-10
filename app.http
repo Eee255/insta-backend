@@ -1,0 +1,109 @@
+post http://localhost:8800/api/auth/register
+Content-Type: application/json
+
+{
+  "name": "Vidya sagar",
+  "email": "sagar@gmail.com",
+  "password": "sagar@2468",
+  "profilePic": "https://res.cloudinary.com/djhel6ruo/image/upload/v1737991725/IMG_20250127_205707_isoqgi.jpg",
+  "coverPic": "https://res.cloudinary.com/djhel6ruo/image/upload/v1737991763/IMG_20250127_205554_hj0zio.jpg",
+  "desc": "Prabhas"
+}
+
+###
+post http://localhost:8800/api/auth/login
+Content-Type: application/json
+
+{
+   "email": "sagar@gmail.com",
+    "password": "sagar@2468"
+}
+
+###
+post  http://localhost:8800/api/auth/logout
+
+###
+get http://localhost:8800/api/user/profile/1
+
+###
+post http://localhost:8800/api/posts
+Content-Type: application/json
+
+{
+  "postDesc": "Be obessed with your own potential ☺",
+  "postImg": "https://res.cloudinary.com/djhel6ruo/image/upload/v1737997602/02e35b46ebc7b67afce20adb547c683b_xpyuth.jpg"
+}
+
+
+###
+get http://localhost:8800/api/posts
+
+###
+get http://localhost:8800/api/posts
+Content-Type: application/json
+
+{
+  "profileId": 1
+}
+
+
+###
+delete http://localhost:8800/api/posts/9
+
+###
+get http://localhost:8800/api/checkAuth
+
+
+###
+get http://localhost:8800/api/comments
+
+
+###
+post http://localhost:8800/api/comments
+Content-Type: application/json
+
+{
+  "commentDesc": "Awesome content! Looking forward to more posts like this.",
+  "commentPostId": 1
+}
+
+###
+get http://localhost:8800/api/comments/3
+
+
+###
+get http://localhost:8800/api/likes/1
+
+###
+post http://localhost:8800/api/likes
+Content-Type: application/json
+
+{
+  "postId": 20
+}
+
+
+###
+DELETE http://localhost:8800/api/likes/1
+
+###
+get http://localhost:8800/api/relationships/followers/3
+
+###
+get http://localhost:8800/api/relationships/following/3
+
+###
+post http://localhost:8800/api/relationships
+Content-Type: application/json
+
+{
+  "followingId": 1
+}
+
+
+###
+DELETE http://localhost:8800/api/relationships/1
+
+
+
+
