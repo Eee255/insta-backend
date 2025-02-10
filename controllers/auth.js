@@ -29,41 +29,47 @@ export const register = async (req, res) => {
     }
   };
 
-// Login a user
-export const login = async (req, res) => {
-  const { email, password } = req.body;
 
-  const getUserQuery = 'SELECT * FROM users WHERE email = ?';
-
-  try {
-      // Check if the user exists
+  
+  export const login = async (req, res) => {
+    const { email, password } = req.body;
+    const getUserQuery = 'SELECT * FROM users WHERE email = ?';
+  
+    try {
       const user = await db.get(getUserQuery, [email]);
-      
+  
       if (!user) {
-          return res.status(400).json({ message: 'User not found!' });
+        return res.status(400).json({ message: 'User not found!' });
       }
+  
       const isPasswordCorrect = await bcrypt.compare(password, user.password);
       if (!isPasswordCorrect) {
-          return res.status(400).json({ message: 'Incorrect password!' });
+        return res.status(400).json({ message: 'Incorrect password!' });
       }
+  
       const token = jwt.sign({ id: user.userId }, "your_secret_key", { expiresIn: "1h" });
-
       const { password: _, ...userData } = user;
-
-      res.cookie("accessToken", token, {maxAge: 60 * 60 * 1000});
-
+  
+      // Set cookie with proper security flags
+      res.cookie("accessToken", token, {
+        httpOnly: true,
+        secure: true,              // Use true if using HTTPS
+        sameSite: "None",          // Allows cross-site cookie
+        maxAge: 60 * 60 * 1000,    // 1 hour
+      });
+  
       return res.status(200).json({
-        message: "Succefully login",
+        message: "Successfully logged in",
         token,
         userData
       });
-
-  } catch (error) {
-    
+  
+    } catch (error) {
+      console.error("Login Error:", error);  // Log the actual error for debugging
       return res.status(500).json({ message: 'Something went wrong!' });
-  }
-};
-
+    }
+  };
+  
 
 // Logout a user
 export const logout = (req, res) => {

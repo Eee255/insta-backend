@@ -21,11 +21,10 @@ const __dirname = dirname(__filename);
 const app = express();
 app.use(express.json());
 app.use(cors({
-  origin: ["http://localhost:5173", "https://your-frontend-domain.com"], // Add your frontend domain here
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  credentials: true,
+  origin: "http://localhost:5173", 
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
 }));
-
 app.options("*", cors()); 
 
 
