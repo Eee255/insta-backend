@@ -14,50 +14,36 @@ import relationshipsRoutes from './routes/relationships.js';
 import commentsRoutes from './routes/comment.js';
 import likesRoutes from './routes/likes.js';
 
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const app = express();
 app.use(express.json());
-app.use(cors({
-  origin: "http://localhost:5173", 
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true
-}));
-app.options("*", cors()); 
-
-
 app.use(cookieParser());
 
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", req.headers.origin || "*");
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-  res.header("Access-Control-Allow-Credentials", "true");
-  if (req.method === "OPTIONS") {
-    return res.sendStatus(200);
-  }
-  next();
-});
+// ✅ Simplified CORS Setup
+app.use(cors({
+  origin: ["http://localhost:5173", "https://your-frontend-domain.com"], // Replace with your deployed frontend URL
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  credentials: true
+}));
 
+// ✅ Remove redundant manual CORS headers
+// app.use((req, res, next) => { ... }); ❌
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, '../frontend/public/upload')
+    cb(null, '../frontend/public/upload');
   },
   filename: function (req, file, cb) {
-    
-    cb(null, Date.now() + file.originalname)
+    cb(null, Date.now() + file.originalname);
   }
-})
+});
 
 const upload = multer({ storage: storage });
 
-
-
 const dbPath = join(__dirname, 'social.db');
-let db = null;  
+let db = null;
 
 const initializeDbAndServer = async () => {
   try {
@@ -71,14 +57,15 @@ const initializeDbAndServer = async () => {
     });
   } catch (error) {
     console.error(`DB Error: ${error.message}`);
-    process.exit(1);  
+    process.exit(1);
   }
 };
-
 
 initializeDbAndServer();
 
 export { db };
+
+// ✅ File Upload Endpoint
 app.post("/api/upload", upload.single("file"), (req, res) => {
   const file = req.file;
   if (file) {
@@ -86,7 +73,9 @@ app.post("/api/upload", upload.single("file"), (req, res) => {
   } else {
     res.status(400).json({ message: "File upload failed" });
   }
-})
+});
+
+// ✅ API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/posts', postRoutes);
@@ -94,4 +83,3 @@ app.use('/api/relationships', relationshipsRoutes);
 app.use('/api', authoriRoutes);
 app.use('/api/comments', commentsRoutes);
 app.use('/api/likes', likesRoutes);
-
